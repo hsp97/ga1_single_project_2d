@@ -9,39 +9,45 @@ using Object = System.Object;
 
 public class Player : MonoBehaviour
 {
-    private float _h;
-    private float _v;
-
     [SerializeField] private float _maxSpeed = 100f;
     [SerializeField] private float _speed = 1f;
     [SerializeField] private float _accelerationRate = 5f;
 
+    private Vector2 _normalizedDirection;
+    private Rigidbody2D _rigidbody;
+
     void Start()
     {
-        
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        _h = Input.GetAxis("Horizontal");
-        _v = Input.GetAxis("Vertical");
-
-        Vector3 normalizedDirection = new Vector3(_h, _v,0).normalized;
+        float _h = Input.GetAxis("Horizontal");
+        float _v = Input.GetAxis("Vertical");
+        _normalizedDirection = new Vector2(_h, _v).normalized;
         
         if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
         {
             _speed *= 1f + _accelerationRate * Time.deltaTime;
-            _speed = Mathf.Min(_speed, _maxSpeed);
+            _speed = Math.Clamp(_speed, 0, _maxSpeed);
         }
+    }
 
-        transform.position += Math.Clamp(_speed, 1, _maxSpeed) * Time.deltaTime * normalizedDirection;
+    private void FixedUpdate()
+    {
+        _rigidbody.MovePosition(_rigidbody.position + _normalizedDirection * _speed * Time.fixedDeltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            Vector2 direction = (enemy.transform.position - transform.position).normalized;
+            enemy.KnockBack(_speed, direction);
             _speed = 1;
+
         }
     }
 

@@ -1,0 +1,14 @@
+using UnityEngine;
+
+public class #SCRIPTNAME# : MonoBehaviour
+{
+    private void Start()
+    {
+        #NOTRIM#
+    }
+
+    private void Update()
+    {
+        #NOTRIM#
+    }
+}

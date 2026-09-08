@@ -39,15 +39,27 @@ public class Player : MonoBehaviour
         _rigidbody.MovePosition(_rigidbody.position + _normalizedDirection * _speed * Time.fixedDeltaTime);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            Vector2 direction = (enemy.transform.position - transform.position).normalized;
+            Debug.Log(direction);
+            enemy.KnockBack(_speed, direction);
+            _speed = 1;
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
             Vector2 direction = (enemy.transform.position - transform.position).normalized;
+            Debug.Log(direction);
             enemy.KnockBack(_speed, direction);
             _speed = 1;
-
         }
     }
 

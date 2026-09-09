@@ -210,6 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e6e581a713e4d4cb166d4bdf8d1308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitBox
+  _collider: {fileID: 239233800}
   _dash: {fileID: 770862984}
 --- !u!1 &770862978
 GameObject:
@@ -393,10 +394,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4d80fd00c543c458a5406eb5c13433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  _maxSpeed: 1500
-  _speed: 1
-  _accelerationRate: 10
+  _rigidbody: {fileID: 770862980}
   _dash: {fileID: 770862984}
+  _maxSpeed: 1500
+  _acceleration: 100
+  _deceleration: 40
+  _bashStunDuration: 0.15
 --- !u!114 &770862984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,6 +412,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb324a523e415f4cb551a32cfad72f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Dash
+  _rigidbody: {fileID: 770862980}
+  _hitbox: {fileID: 239233801}
+  _player: {fileID: 770862983}
+  _dashKey: 304
+  _dashSpeed: 250
+  _dashDuration: 0.18
+  _dashCooldown: 0.5
+  _disableGravity: 1
+  _minBashSpeed: 40
+  _knockbackSpeed: 500
+  _knockbackDuration: 0.6
+  _scaleKnockbackBySpeed: 1
 --- !u!1 &914561675
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,7 +771,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6994aa389a81164d83b276e055855a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  _weight: 1
+  _rigidbody: {fileID: 0}
+  _horizontal: 0.7
+  _verticalSnap: 0.85
+  _speedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _disableGravity: 1
+  _slamDotThreshold: 0.5
 --- !u!1 &1961037839
 GameObject:
   m_ObjectHideFlags: 0

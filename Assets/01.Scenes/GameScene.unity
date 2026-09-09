@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 239233799}
   - component: {fileID: 239233800}
+  - component: {fileID: 239233801}
   m_Layer: 9
   m_Name: DashHitBox
   m_TagString: Untagged
@@ -197,6 +198,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &239233801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239233798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e6e581a713e4d4cb166d4bdf8d1308, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitBox
+  _dash: {fileID: 770862984}
 --- !u!1 &770862978
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,6 +224,7 @@ GameObject:
   - component: {fileID: 770862980}
   - component: {fileID: 770862979}
   - component: {fileID: 770862983}
+  - component: {fileID: 770862984}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -381,6 +396,19 @@ MonoBehaviour:
   _maxSpeed: 1500
   _speed: 1
   _accelerationRate: 10
+  _dash: {fileID: 770862984}
+--- !u!114 &770862984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770862978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb324a523e415f4cb551a32cfad72f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Dash
 --- !u!1 &914561675
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
         
         float safeWeight = Mathf.Max(_weight, 0.01f);
         float power = speed / safeWeight;
-
-        _rigidbody.AddForce(direction * power, (ForceMode2D)ForceMode.Impulse);
+        
+        _rigidbody.linearVelocity = direction * power;
     }
 }

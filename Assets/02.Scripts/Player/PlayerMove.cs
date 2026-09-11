@@ -65,6 +65,16 @@ public class PlayerMove : MonoBehaviour
         _body.linearVelocityX *= speedRetainRatio;
         _dash.Cancel();
     }
+    
+    public void LimitSpeedX(float maxSpeed)
+    {
+        float speedX = _body.linearVelocityX;
+
+        if (Mathf.Abs(speedX) > maxSpeed)
+        {
+            _body.linearVelocityX = Mathf.Sign(speedX) * maxSpeed;
+        }
+    }
 
     /// 입력값을 방향(-1, 0, 1)으로 바꾼다.
     /// <param name="moveInput">좌우 입력값 (-1 ~ 1)</param>

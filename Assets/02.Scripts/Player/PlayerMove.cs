@@ -49,6 +49,7 @@ public class PlayerMove : MonoBehaviour
         // 대시 상태를 먼저 갱신해야 이번 스텝의 최고 속도가 정해진다.
         _dash.Tick(_movement, inputDirection, _body.linearVelocityX, _isGrounded, Time.fixedDeltaTime);
 
+        Debug.Log("fixupdated");
         UpdateHorizontalSpeed(moveInput, inputDirection);
         TryJump();
     }
@@ -99,6 +100,12 @@ public class PlayerMove : MonoBehaviour
         float targetSpeed = inputDirection == 0 ? 0f : moveInput * maxSpeed;
         float changeRate = GetSpeedChangeRate(inputDirection, currentSpeed);
 
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            Debug.Log($"Alt 누름");
+            currentSpeed = _movement.DashMaxSpeed;
+        }
+        
         _body.linearVelocityX = Mathf.MoveTowards(currentSpeed, targetSpeed, changeRate * Time.fixedDeltaTime);
     }
 

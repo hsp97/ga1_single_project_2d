@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyKnockback : MonoBehaviour
 {
+    [SerializeField]
+    private Animator _animator;
     // 바닥으로 인정할 접촉 방향 범위. PlayerMove와 같은 기준이다.
     private const float MinGroundNormalAngle = 45f;
     private const float MaxGroundNormalAngle = 135f;
@@ -81,10 +83,12 @@ public class EnemyKnockback : MonoBehaviour
         {
             return false;
         }
+        _animator.SetTrigger("hit");
 
         // AddForce 대신 속도를 직접 넣어서, 질량과 상관없이 계산한 값 그대로 날아가게 한다.
         _body.linearVelocity = velocity;
         ChangeState(State.Knockback);
+        _animator.SetTrigger("idle");
         return true;
     }
 

@@ -40,9 +40,27 @@ public class PlayerMovementConfig
     [Tooltip("이 속도 아래로 느려지면 대시가 풀린다 (유닛/초). 대시 진입 속도보다 높게 설정할 수 없다.")]
     [SerializeField, Min(0f)] private float _dashExitSpeed = 50f;
 
+    [Header("Burst Dash")]
+    [Tooltip("버스트 대시 순간의 속도 (유닛/초)")]
+    [SerializeField, Min(0f)] private float _burstSpeed = 200f;
+
+    [Tooltip("버스트 후 이 시간(초) 동안은 감속하지 않고 속도를 유지한다.")]
+    [SerializeField, Min(0f)] private float _burstHoldTime = 0.3f;
+
+    [Tooltip("버스트 대시를 다시 쓸 수 있을 때까지의 시간 (초)")]
+    [SerializeField, Min(0f)] private float _burstCooldown = 0.8f;
+
     [Header("Jump")]
     [Tooltip("점프 순간의 위쪽 속도 (유닛/초)")]
     [SerializeField, Min(0f)] private float _jumpVelocity = 140f;
+    /// 버스트 대시 속도 (유닛/초)
+    public float BurstSpeed => _burstSpeed;
+
+    /// 버스트 후 속도를 유지하는 시간 (초)
+    public float BurstHoldTime => _burstHoldTime;
+
+    /// 버스트 대시 재사용 대기 시간 (초)
+    public float BurstCooldown => _burstCooldown;
 
     /// <summary>기본 최고 속도 (유닛/초).</summary>
     public float WalkMaxSpeed => _walkMaxSpeed;

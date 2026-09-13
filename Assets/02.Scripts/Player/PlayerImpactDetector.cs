@@ -33,13 +33,29 @@ public class PlayerImpactDetector : MonoBehaviour
     [Tooltip("넉백 방향 각도. 0이면 수평, 90이면 수직 위")]
     [SerializeField, Range(0f, 90f)] private float _knockbackAngle = 40f;
 
+    [Header("Launch")]
+    [Tooltip("대시로 부딪혔을 때 발사 속도 = 플레이어 속도 × 이 값")]
+    [SerializeField, Min(0f)] private float _launchPerSpeed = 2f;
+
+    [Tooltip("발사 방향 각도. 낮을수록 수평으로 날아간다.")]
+    [SerializeField, Range(0f, 90f)] private float _launchAngle = 10f;
+
     [Header("Player Recoil")]
     [Tooltip("넉백을 준 뒤 플레이어에게 남는 속도 비율. 0이면 멈추고 1이면 그대로")]
     [SerializeField, Range(-1f, 1f)] private float _playerSpeedRetain = -1f;
 
-    [Header("Debug")]
-    [Tooltip("넉백을 줄 때마다 Console에 속도를 출력한다.")]
-    [SerializeField] private bool _logHits = true;
+    [Header("Feedback")]
+    [Tooltip("일반 충돌 시 멈추는 시간 (초). 0이면 히트스톱 없음")]
+    [SerializeField, Min(0f)] private float _hitStopTime = 0.04f;
+
+    [Tooltip("대시 발사 시 멈추는 시간 (초)")]
+    [SerializeField, Min(0f)] private float _launchHitStopTime = 0.09f;
+
+    [Tooltip("대시 발사 시 카메라가 흔들리는 거리 (유닛). 벽꽝보다 약하게 둔다.")]
+    [SerializeField, Min(0f)] private float _launchShakeStrength = 5f;
+
+    [Tooltip("대시 발사 시 카메라가 흔들리는 시간 (초)")]
+    [SerializeField, Min(0f)] private float _launchShakeTime = 0.15f;
 
     // 매 스텝 새로 만들지 않고 재사용해서 GC 할당을 없앤다.
     private readonly RaycastHit2D[] _hits = new RaycastHit2D[MaxHitCount];
@@ -90,16 +106,24 @@ public class PlayerImpactDetector : MonoBehaviour
             return;
         }
 
-        Vector2 knockbackVelocity = CalculateKnockbackVelocity(speedX);
-
-        if (enemy.TryApplyKnockback(knockbackVelocity))
+        if (!GameFeelSettings.KnockbackEnabled)
         {
-            _playerMove.ApplyImpactRecoil(_playerSpeedRetain);
+            _playerMove.LimitSpeedX(distanceToEnemy / Time.fixedDeltaTime);
+            return;
+        }
 
-            if (_logHits)
+        bool isLaunch = _playerMove.IsDashing;
+        Vector2 hitVelocity = isLaunch ? CalculateLaunchVelocity(speedX) : CalculateKnockbackVelocity(speedX);
+
+        if (enemy.TryApplyKnockback(hitVelocity, isLaunch))
+        {
+            // 대시로 뚫고 지나갈 때는 속도를 유지해서, 강하게 밀어붙이는 느낌을 남긴다.
+            if (!isLaunch)
             {
-                Debug.Log($"[Hit] player {speedX:F1} → knockback {knockbackVelocity}", this);
+                _playerMove.ApplyImpactRecoil(_playerSpeedRetain);
             }
+
+            PlayHitFeedback(isLaunch);
 
             return;
         }
@@ -156,5 +180,36 @@ public class PlayerImpactDetector : MonoBehaviour
         var direction = new Vector2(Mathf.Cos(angleRadians) * directionX, Mathf.Sin(angleRadians));
 
         return direction * speed;
+    }
+
+    /// 대시 충돌의 발사 속도를 계산한다. 일반 넉백과 달리 상한이 없다.
+    /// <param name="playerSpeedX">플레이어의 수평 속도. 부호가 날아갈 방향이 된다.</param>
+    /// <returns>적에게 줄 속도 (유닛/초)</returns>
+    private Vector2 CalculateLaunchVelocity(float playerSpeedX)
+    {
+        float directionX = Mathf.Sign(playerSpeedX);
+        float speed = Mathf.Abs(playerSpeedX) * _launchPerSpeed;
+
+        float angleRadians = _launchAngle * Mathf.Deg2Rad;
+        var direction = new Vector2(Mathf.Cos(angleRadians) * directionX, Mathf.Sin(angleRadians));
+
+        return direction * speed;
+    }
+
+    /// 충돌 종류에 맞는 히트스톱과 카메라 흔들림을 재생한다.
+    /// <param name="isLaunch">대시 발사인지 여부</param>
+    private void PlayHitFeedback(bool isLaunch)
+    {
+        if (!isLaunch)
+        {
+            // 밀어붙이는 동안 반복해서 맞으므로 짧게 준다.
+            HitStop.Play(_hitStopTime);
+            return;
+        }
+
+        HitStop.Play(_launchHitStopTime);
+
+        // 벽꽝보다 약하게 흔들어야 벽에 박히는 순간이 더 강하게 느껴진다.
+        CameraShake.Play(_launchShakeStrength, _launchShakeTime);
     }
 }

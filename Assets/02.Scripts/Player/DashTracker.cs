@@ -44,6 +44,12 @@ public class DashTracker
         SetDashing(false);
     }
 
+    /// 대시 상태를 즉시 켠다. (버스트 대시 같은 외부 발동)
+    public void ForceStart()
+    {
+        SetDashing(true);
+    }
+
     /// 지상에서, 입력 방향으로, 걷기 최고 속도 근처를 유지 중인지 확인한다.
     private static bool CanCharge(PlayerMovementConfig config, int inputDirection, float speedX, bool isGrounded)
     {

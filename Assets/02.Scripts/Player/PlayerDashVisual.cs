@@ -23,7 +23,6 @@ public class PlayerDashVisual : MonoBehaviour
 
         if (_motor == null)
         {
-            Debug.LogError($"[{name}] PlayerMotor를 찾을 수 없어 대시 표시를 끕니다.", this);
             enabled = false;
         }
     }

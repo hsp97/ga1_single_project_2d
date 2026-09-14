@@ -16,7 +16,6 @@ public class HitStop : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            Debug.LogWarning($"[{name}] HitStop이 이미 있어 이 컴포넌트를 끕니다.", this);
             enabled = false;
             return;
         }

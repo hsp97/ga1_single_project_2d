@@ -1,6 +1,5 @@
 using UnityEngine;
 
-/// 카메라를 짧게 흔들어 충격을 표현한다. 카메라 오브젝트에 붙인다.
 public class CameraShake : MonoBehaviour
 {
     // 씬에 하나뿐인 인스턴스.
@@ -18,7 +17,6 @@ public class CameraShake : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            Debug.LogWarning($"[{name}] CameraShake가 이미 있어 이 컴포넌트를 끕니다.", this);
             enabled = false;
             return;
         }
